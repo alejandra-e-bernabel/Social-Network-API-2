@@ -77,13 +77,45 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-
 //route `/api/users/:userId/friends/:friendId`**
 
 // `POST` to add a new friend to a user's friend list
+router.post('/:userId/friends/:friendId', async (req,res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { _id: req.params.userId},
+            { $addToSet: {friends: req.params.friendId} },
+            { runValidators: true, new: true} 
+        );
+
+        if (!user) {
+            return res.status(404).json( { message: 'No such user exists'});
+        };
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 // `DELETE` to remove a friend from a user's friend list
+router.delete('/:userId/friends/:friendId', async (req,res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { _id: req.params.userId},
+            { $pull: {friends: { _id: req.params.friendId}} },
+            { runValidators: true, new: true} 
+        );
 
+        if (!user) {
+            return res.status(404).json( { message: 'No such user exists'});
+        };
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 
 

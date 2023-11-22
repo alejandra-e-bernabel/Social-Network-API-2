@@ -36,7 +36,7 @@ const userSchema  = new Schema (
 
     {
             toJSON: {
-                vurtuals: true,
+                virtuals: true,
             },
             id: false,
     }
