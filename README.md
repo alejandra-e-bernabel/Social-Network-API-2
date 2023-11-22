@@ -10,7 +10,7 @@ An API for a social network web application where users can share their thoughts
 
 This project was built to practice the fundamentals of creating a NoSQL MongoDB database using Mongoose. I practiced creating document schemas, understanding subdocuments and their purposes, and understanding the overall document structure needed to create MERN applications.
 
-![Postman Example](image.png)
+![Postman Example](/assets/images/image.png)
 
 ## Table of Contents
 
