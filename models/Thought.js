@@ -29,8 +29,19 @@ const thoughtSchema = new Schema(
 
         reactions: [reactionSchema]
 
+    },
+
+    {
+        toJSON: {
+            vurtuals: true,
+        },
+        id: false,
     }
 );
+
+thoughtSchema.virtual('reactionCount').get(function() {
+    return this.comments.length;
+})
 
 const Thought = model('thought', thoughtSchema)
 
