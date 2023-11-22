@@ -75,12 +75,47 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-
 // `/api/thoughts/:thoughtId/reactions`**
 
-
 // `POST` to create a reaction stored in a single thought's `reactions` array field
+router.post('/:thoughtId/reactions', async (req,res) => {
+    try {
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId},
+            { $addToSet: {reactions: req.body} },
+            { runValidators: true, new: true} 
+        );
+
+        if (!thought) {
+            return res.status(404).json( { message: 'No such thought exists'});
+        };
+
+        res.json(thought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 
 // `DELETE` to pull and remove a reaction by the reaction's `reactionId` value
+router.delete('/:thoughtId/reactions/:reactionId', async (req,res) => {
+    try {
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId},
+            { $pull: {reactions: { _id: req.params.thoughtId}} },
+            { runValidators: true, new: true} 
+        );
+
+        if (!thought) {
+            return res.status(404).json( { message: 'No such thought exists'});
+        };
+
+        res.json(thought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+
 
 module.exports = router;
