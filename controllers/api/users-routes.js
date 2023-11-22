@@ -1,4 +1,5 @@
 const User = require('../../models/User');
+
 const router = require ('express').Router();
 
 // /api/users routes
@@ -12,7 +13,6 @@ router.get('/', async (req, res) => {
         res.status(500).json(err);
     }
 });
-
 
 // get a single user by its id
 router.get('/:id', async (req, res) => {
@@ -68,6 +68,7 @@ router.delete('/:id', async (req, res) => {
         if (!user) {
             return res.status(404).json({message: 'No such user exists'});
         };
+
     
         res.json({message: 'User successfully deleted'});
     } catch (err) {
