@@ -1,5 +1,7 @@
 const Thought = require('../../models/Thought');
+const User = require('../../models/User');
 const router = require ('express').Router();
+
 
 // /api/thoughts routes
 
@@ -32,11 +34,26 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const thoughtData = await Thought.create(req.body);
+
+        const {userId } = req.body;
+        const {_id} = thoughtData;
+
+        const updateUser = await User.findOneAndUpdate(
+            {_id: userId},
+            { $addToSet: {thoughts: _id}}
+        );
+
+        if (!updateUser) {
+            return res.status(404).json( { message: 'No such user exists'});
+        }
+
         res.json(thoughtData);
+
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
-})
+});
 
 // update a thougth by id
 router.put('/:id', async (req, res) => {
