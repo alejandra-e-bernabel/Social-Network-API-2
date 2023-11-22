@@ -78,11 +78,26 @@ router.put('/:id', async (req, res) => {
 // delete a thought by id
 router.delete('/:id', async (req, res) => {
     try {
+                
+
+        //pop the thought ID from user
+        const thoughtInfo = await Thought.findOne({_id: req.params.id});
+
+        if (!thoughtInfo) {
+            return res.status(404).json({message : 'No such thought'});
+        };
+
+        const user = await User.findOne({ username : thoughtInfo.username});
+
+        if (!user) {
+            return res.status(404).json( { message: 'No such user exists'});
+        };
+
+        // delete the thought 
         const thought = await Thought.deleteOne({_id: req.params.id});
 
-        if (!thought) {
-            return res.status(404).json({message: 'No such thought exists'});
-        };
+        user.thoughts.pull(req.params.id);
+        await user.save();
     
         res.json({message: 'Thought successfully deleted'});
     } catch (err) {
